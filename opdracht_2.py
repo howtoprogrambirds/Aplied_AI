@@ -112,11 +112,11 @@ def update(centroids, df):
     return centroids
 
 def get_season_by_centroid(df, centroids):
-    print(np.unique(df["season"].values))
+    print("the default seasons", np.unique(df["season"].values))
     for index, rows in df.iterrows():
         df.loc[index, "season"] = centroids[rows["closest"]]["season"].values[0]
         # rows["season"] = centroids[rows["closest"]]["season"]
-    print(np.unique(df["season"].values))
+    print("the seasons chosen by centroid(s)", np.unique(df["season"].values))
     return df
 
 def get_furthest_distance_intra_cluster(df, centroids):
@@ -162,9 +162,8 @@ for k in range(1, 10):
 
     df = assignment(df, centroids)
 
-    print("test")
+    print("relocate centriods")
     update(centroids, df)
-    print("test")
     while True:
         closest_centroids = df['closest'].copy(deep=True)
         centroids = update(centroids, df)
@@ -172,7 +171,7 @@ for k in range(1, 10):
         if closest_centroids.equals(df['closest']):
             break
         else:
-            print("continue")
+            print("relocate centriods")
 
     df = get_season_by_centroid(df, centroids)
 
@@ -185,14 +184,14 @@ for k in range(1, 10):
             wrong += 1
 
     k_list.append(k)
-    print("K: %i with %i good and %i wrong (%.1f%%)" % (k, good, wrong, (good / (good + wrong)) * 100.0))
+    print(f"K = {k} with {good} good and {wrong} wrong ({int((good / (good + wrong)) * 100.0)}%) ")
     furthest_distances.append(get_furthest_distance_intra_cluster(df, centroids))
 plt.plot(k_list, furthest_distances)
 plt.xlabel("k")
 plt.title("k-Means plot")
 plt.ylabel("Max intra cluster distance")
 plt.show()
-print("test")
+
 
 
 
